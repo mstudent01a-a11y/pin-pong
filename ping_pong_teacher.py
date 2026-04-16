@@ -2,22 +2,23 @@ from pygame import *
 
 win_width = 700
 win_height = 500
-back =(100, 100,255)
+back =(255,255,100)
 window = display.set_mode((win_width, win_height))
 display.set_caption('Пинг Понг')
 window.fill(back)
 run = True
 finish = False
+score_l = 0
+score_r = 0
 
 font.init()
-font = font.Font(None, 30)
-score_l = font.render('SCORE_L: 0', True, (255, 255, 255))
-win_l = font.render('PLAYER L WIN!', True, (180, 0, 0))
-score_r = font.render('SCORE_R: 0', True, (180, 0, 0))
-win_r = font.render('PLAYER R WIN!', True, (180, 0, 0))
-count_l = 0
-count_r = 0
-
+font1 = font.SysFont('verdana', 20)
+font = font.SysFont('verdana', 50)
+win_l = font.render('PLAYER L WIN!', True, (0, 255, 100))
+win_r = font.render('PLAYER R WIN!', True, (0, 255, 100))
+text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
+text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
+ 
 class Game_Sprite(sprite.Sprite):
     def __init__(self,picture, w, h, x, y):
         super().__init__()
@@ -66,9 +67,9 @@ class Player(Game_Sprite):
 
     
 
-ball = Player('ball02.png',50, 50 , 200, 200, 5, 5)
-player_l = Player('platform_v2.png',30, 150 , 0, 200, 0, 10)	 
-player_r = Player('platform_v2.png',30, 150 , 670, 200, 0, 10)	
+ball = Player('ball0.png',50, 50 , 200, 300, 5, 5)
+player_l = Player('platform_v.png',30, 150 , 0, 200, 0, 10)	 
+player_r = Player('platform_v.png',30, 150 , 670, 200, 0, 10)	
 
 
 while run:
@@ -76,17 +77,26 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
-    window.fill(back)
-    ball.reset()
-    player_l.reset()    
-    player_r.reset()     
-    ball.update_ball()
-    player_l.update_l()
-    player_r.update_r()
-    if sprite.collide_rect(player_l, ball) or sprite.collide_rect(player_r, ball):
-        ball.speed_x *= -1
-
-    window.blit(score_l, (20, 20))
-    #self.image = pygame.font.SysFont('verdana', fsize).render(text, True, text_color)
+    if not finish:
+        window.fill(back)
+        ball.reset()
+        player_l.reset()    
+        player_r.reset()     
+        ball.update_ball()
+        player_l.update_l()
+        player_r.update_r()
+        window.blit(text_score_r, (540, 20))
+        window.blit(text_score_l, (40, 20))
+        if sprite.collide_rect(player_l, ball) or sprite.collide_rect(player_r, ball):
+            ball.speed_x *= -1
+     
+        if ball.rect.x > win_width:
+            score_l += 1
+            text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
+            ball.rect.x = 300
+            ball.rect.y = 200            
+            if score_l >= 3:             
+                window.blit(win_l, (180, 200))            
+                finish = True           
 
     display.update()
