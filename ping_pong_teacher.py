@@ -87,5 +87,6 @@ while run:
         ball.speed_x *= -1
 
     window.blit(score_l, (20, 20))
+    #self.image = pygame.font.SysFont('verdana', fsize).render(text, True, text_color)
 
     display.update()
