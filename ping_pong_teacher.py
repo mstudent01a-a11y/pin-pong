@@ -9,6 +9,15 @@ window.fill(back)
 run = True
 finish = False
 
+font.init()
+font = font.Font(None, 30)
+score_l = font.render('SCORE_L: 0', True, (255, 255, 255))
+win_l = font.render('PLAYER L WIN!', True, (180, 0, 0))
+score_r = font.render('SCORE_R: 0', True, (180, 0, 0))
+win_r = font.render('PLAYER R WIN!', True, (180, 0, 0))
+count_l = 0
+count_r = 0
+
 class Game_Sprite(sprite.Sprite):
     def __init__(self,picture, w, h, x, y):
         super().__init__()
@@ -51,11 +60,15 @@ class Player(Game_Sprite):
         if keys[K_s] and self.rect.y < win_height - self.rect.h:
             self.rect.y += self.speed_y    
 
+    def colliderect(self, rect):
+       return self.rect.colliderect(rect)
+
+
     
 
-ball = Player('ball02.png',50, 50 , 200, 200, 10, 5)
-player_l = Player('platform_v0.png',30, 150 , 0, 200, 0, 10)	 
-player_r = Player('platform_v0.png',30, 150 , 670, 200, 0, 10)	
+ball = Player('ball02.png',50, 50 , 200, 200, 5, 5)
+player_l = Player('platform_v2.png',30, 150 , 0, 200, 0, 10)	 
+player_r = Player('platform_v2.png',30, 150 , 670, 200, 0, 10)	
 
 
 while run:
@@ -70,5 +83,9 @@ while run:
     ball.update_ball()
     player_l.update_l()
     player_r.update_r()
+    if sprite.collide_rect(player_l, ball) or sprite.collide_rect(player_r, ball):
+        ball.speed_x *= -1
+
+    window.blit(score_l, (20, 20))
 
     display.update()
