@@ -28,11 +28,13 @@ class Player(Game_Sprite):
         self.speed_x = speed_x
         self.speed_y = speed_y
 
-    def update_ball(self):
-        self.rect.x += self.speed_x       
-        self.rect.y += self.speed_y
+     def update_ball(self):
+        self.rect.x += self.speed_x   
         if self.rect.x < 0 or self.rect.x > win_width - self.rect.w:
-            self.speed_x *= -1
+            self.speed_x *= -1    
+        self.rect.y -= self.speed_y
+        if self.rect.y < 0:
+            self.speed_y *= -1
        
 
     def update_r(self): 
