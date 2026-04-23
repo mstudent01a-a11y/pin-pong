@@ -14,10 +14,12 @@ score_r = 0
 font.init()
 font1 = font.SysFont('verdana', 20)
 font = font.SysFont('verdana', 50)
+
 win_l = font.render('PLAYER L WIN!', True, (0, 255, 100))
 win_r = font.render('PLAYER R WIN!', True, (0, 255, 100))
 text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
 text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
+restart = font1.render('Хочешь начать заново - жми ПРОБЕЛ', True, (0, 0, 0))
  
 class Game_Sprite(sprite.Sprite):
     def __init__(self,picture, w, h, x, y):
@@ -41,7 +43,7 @@ class Player(Game_Sprite):
     def update_ball(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
-        if self.rect.y < 0 or self.rect.y > win_height - self.rect.h:
+        if self.rect.y < 0 or self.rect.y > 500 - 50: #win_height - self.rect.h:
             self.speed_y *= -1
        
 
@@ -77,6 +79,13 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+        elif e.type == KEYDOWN:
+            if e.key == K_SPACE:
+                score_l = 0
+                score_r = 0
+                time.delay(1000)
+                finish = False
+
     if not finish:
         window.fill(back)
         ball.reset()
@@ -84,19 +93,32 @@ while run:
         player_r.reset()     
         ball.update_ball()
         player_l.update_l()
-        player_r.update_r()
-        window.blit(text_score_r, (540, 20))
-        window.blit(text_score_l, (40, 20))
+        player_r.update_r()       
+
         if sprite.collide_rect(player_l, ball) or sprite.collide_rect(player_r, ball):
             ball.speed_x *= -1
-     
-        if ball.rect.x > win_width:
+
+        if ball.rect.x <0:
+            score_r += 1
+            text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
+         
+            ball.rect.x = 300
+            ball.rect.y = 200
+            if score_r >= 5:
+                window.blit(win_r, (180, 200))
+                window.blit(restart, (150, 450)) 
+                finish = True
+
+        if ball.rect.x > 650:
             score_l += 1
             text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
+          
             ball.rect.x = 300
             ball.rect.y = 200            
-            if score_l >= 3:             
-                window.blit(win_l, (180, 200))            
+            if score_l >= 5:             
+                window.blit(win_l, (180, 200)) 
+                window.blit(restart, (150, 450))           
                 finish = True           
-
+        window.blit(text_score_r, (540, 20))
+        window.blit(text_score_l, (40, 20))
     display.update()
