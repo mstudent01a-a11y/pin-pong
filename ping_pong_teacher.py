@@ -1,5 +1,6 @@
 from pygame import *
 #коментарии с изменениями
+#коментарий 2
 
 win_width = 700
 win_height = 500
