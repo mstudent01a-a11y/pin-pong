@@ -12,13 +12,13 @@ score_l = 0
 score_r = 0
 
 font.init()
-font1 = font.SysFont('verdana', 20)
+font1 = font.SysFont('verdana bold', 40)
 font = font.SysFont('verdana', 50)
 
 win_l = font.render('PLAYER L WIN!', True, (0, 255, 100))
 win_r = font.render('PLAYER R WIN!', True, (0, 255, 100))
-text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
-text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
+text_score_l = font1.render('SCORE L: '+ str(score_l), True, (200, 50, 50))
+text_score_r = font1.render('SCORE R: '+ str(score_r), True, (200, 50, 50))
 restart = font1.render('Хочешь начать заново - жми ПРОБЕЛ', True, (0, 0, 0))
 fon = transform.scale(image.load('fon.jpg'), (700, 500))
                       
@@ -103,7 +103,7 @@ while run:
 
         if ball.rect.x <0:
             score_r += 1
-            text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
+            text_score_r = font1.render('SCORE R: '+ str(score_r), True, (200, 50, 50))
          
             ball.rect.x = 300
             ball.rect.y = 200
@@ -114,7 +114,7 @@ while run:
 
         if ball.rect.x > 650:
             score_l += 1
-            text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
+            text_score_l = font1.render('SCORE L: '+ str(score_l), True, (200, 50, 50))
           
             ball.rect.x = 300
             ball.rect.y = 200            
@@ -122,6 +122,6 @@ while run:
                 window.blit(win_l, (180, 200)) 
                 window.blit(restart, (150, 450))           
                 finish = True           
-        window.blit(text_score_r, (540, 20))
-        window.blit(text_score_l, (40, 20))
+        window.blit(text_score_r, (500, 0))
+        window.blit(text_score_l, (40, 0))
     
