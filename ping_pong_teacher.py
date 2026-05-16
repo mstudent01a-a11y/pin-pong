@@ -1,6 +1,4 @@
 from pygame import *
-#коментарии с изменениями
-#коментарий 2
 
 win_width = 700
 win_height = 500
@@ -22,26 +20,25 @@ win_r = font.render('PLAYER R WIN!', True, (0, 255, 100))
 text_score_l = font1.render('SCORE L: '+ str(score_l), True, (0, 0, 180))
 text_score_r = font1.render('SCORE R: '+ str(score_r), True, (0, 0, 180))
 restart = font1.render('Хочешь начать заново - жми ПРОБЕЛ', True, (0, 0, 0))
- 
+fon = transform.scale(image.load('fon.jpg'), (700, 500))
+                      
 class Game_Sprite(sprite.Sprite):
-    def __init__(self,picture, w, h, x, y):
+    def __init__(self,picture, w, h, x, y,speed_x, speed_y):
         super().__init__()
         self.image = transform.scale(image.load(picture), (w, h))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.rect.w = w
-        self.rect.h = h
+        self.speed_x = speed_x
+        self.speed_y = speed_y
     def reset(self):
         window.blit(self.image,(self.rect.x, self.rect.y))
  
 
-class Player(Game_Sprite):
-    def __init__(self, picture, w,h,x,y, speed_x, speed_y):
-        super(). __init__(picture, w, h, x, y)
-        self.speed_x = speed_x
-        self.speed_y = speed_y
 
+
+class Player(Game_Sprite):        
+    pass
     def update_ball(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
@@ -71,13 +68,14 @@ class Player(Game_Sprite):
 
     
 
-ball = Player('ball0.png',50, 50 , 200, 300, 5, 5)
+ball = Player('ball_p.png',50, 50 , 200, 300, 5, 5)
 player_l = Player('platform_v.png',30, 150 , 0, 200, 0, 10)	 
 player_r = Player('platform_v.png',30, 150 , 670, 200, 0, 10)	
 
 
 while run:
     time.delay(50)
+    display.update()
     for e in event.get():
         if e.type == QUIT:
             run = False
@@ -89,10 +87,13 @@ while run:
                 finish = False
 
     if not finish:
-        window.fill(back)
+        #window.fill(back)
+        window.blit(fon, (0,0))
         ball.reset()
         player_l.reset()    
-        player_r.reset()     
+        player_r.reset() 
+        
+            
         ball.update_ball()
         player_l.update_l()
         player_r.update_r()       
@@ -123,4 +124,4 @@ while run:
                 finish = True           
         window.blit(text_score_r, (540, 20))
         window.blit(text_score_l, (40, 20))
-    display.update()
+    
