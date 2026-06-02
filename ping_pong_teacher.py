@@ -1,8 +1,10 @@
 from pygame import *
+#from time import *
 
 win_width = 700
 win_height = 500
 back =(255,255,100)
+text_color = (0, 50, 50)
 window = display.set_mode((win_width, win_height))
 display.set_caption('Пинг Понг')
 window.fill(back)
@@ -10,17 +12,17 @@ run = True
 finish = False
 score_l = 0
 score_r = 0
-
+timer = 0
+timerS = 0
 font.init()
 font1 = font.SysFont('verdana bold', 40)
 font = font.SysFont('verdana', 50)
 
-win_l = font.render('PLAYER L WIN!', True, (0, 255, 100))
-win_r = font.render('PLAYER R WIN!', True, (0, 255, 100))
-text_score_l = font1.render('SCORE L: '+ str(score_l), True, (200, 50, 50))
-text_score_r = font1.render('SCORE R: '+ str(score_r), True, (200, 50, 50))
-restart = font1.render('Хочешь начать заново - жми ПРОБЕЛ', True, (0, 0, 0))
-fon = transform.scale(image.load('fon.jpg'), (700, 500))
+win_l = font.render('PLAYER L WIN!', True, text_color)
+win_r = font.render('PLAYER R WIN!', True, text_color)
+
+restart = font1.render('Хочешь начать заново - жми ПРОБЕЛ', True, text_color)
+fon = transform.scale(image.load('fon0.jpg'), (700, 500))
                       
 class Game_Sprite(sprite.Sprite):
     def __init__(self,picture, w, h, x, y,speed_x, speed_y):
@@ -68,13 +70,14 @@ class Player(Game_Sprite):
 
     
 
-ball = Player('ball_p.png',50, 50 , 200, 300, 5, 5)
+ball = Player('ball_p.png',50, 50 , 200, 300, 10, 10)
 player_l = Player('platform_v.png',30, 150 , 0, 200, 0, 10)	 
 player_r = Player('platform_v.png',30, 150 , 670, 200, 0, 10)	
-
+#fon = Game_Sprite('fon0.jpg', 700, 500, 0, 0, 0, 0)
 
 while run:
-    time.delay(50)
+    
+    time.delay(60)
     display.update()
     for e in event.get():
         if e.type == QUIT:
@@ -83,45 +86,58 @@ while run:
             if e.key == K_SPACE:
                 score_l = 0
                 score_r = 0
-                time.delay(1000)
+                timer = 0
+                #time.delay(1000)
                 finish = False
-
+    
     if not finish:
         #window.fill(back)
-        window.blit(fon, (0,0))
+        window.blit(fon, (0, 0))
+        #fon.reset()
         ball.reset()
         player_l.reset()    
         player_r.reset() 
-        
-            
+        text_score_l = font1.render('SCORE L: '+ str(score_l), True, text_color)
+        text_score_r = font1.render('SCORE R: '+ str(score_r), True, text_color)
+        text_timer = font1.render('Time: '+ str(timer), True, (255, 255, 255))
+        window.blit(text_score_r, (500, 10))
+        window.blit(text_score_l, (40, 10))       
+        window.blit(text_timer, (300, 450))    
+
         ball.update_ball()
         player_l.update_l()
-        player_r.update_r()       
+        player_r.update_r()   
+          
 
         if sprite.collide_rect(player_l, ball) or sprite.collide_rect(player_r, ball):
             ball.speed_x *= -1
 
-        if ball.rect.x <0:
+        if ball.rect.x < 0:
             score_r += 1
-            text_score_r = font1.render('SCORE R: '+ str(score_r), True, (200, 50, 50))
-         
+            text_score_r = font1.render('SCORE R: '+ str(score_r), True, text_color)
+            window.blit(text_score_r, (500, 10))
             ball.rect.x = 300
             ball.rect.y = 200
-            if score_r >= 5:
+            if score_r >= 3:
                 window.blit(win_r, (180, 200))
-                window.blit(restart, (150, 450)) 
+                window.blit(restart, (120, 450)) 
                 finish = True
 
-        if ball.rect.x > 650:
+        if ball.rect.x > win_width - 50:
             score_l += 1
-            text_score_l = font1.render('SCORE L: '+ str(score_l), True, (200, 50, 50))
-          
+            text_score_l = font1.render('SCORE L: '+ str(score_l), True, text_color)
+            window.blit(text_score_l, (40, 10))
             ball.rect.x = 300
             ball.rect.y = 200            
-            if score_l >= 5:             
+            if score_l >= 3:             
                 window.blit(win_l, (180, 200)) 
-                window.blit(restart, (150, 450))           
-                finish = True           
-        window.blit(text_score_r, (500, 0))
-        window.blit(text_score_l, (40, 0))
+                window.blit(restart, (120, 450))           
+                finish = True  
+
+    timerS +=1
+    if timerS == 10:
+        timer += 1
+        timerS = 0    
+
+        
     
